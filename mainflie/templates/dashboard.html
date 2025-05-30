@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌱 스마트팜 실시간 대시보드</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .header { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .sensor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; }
+        .sensor-item { text-align: center; padding: 15px; background: #f8f9fa; border-radius: 6px; }
+        .sensor-value { font-size: 1.5em; font-weight: bold; color: #333; }
+        .sensor-label { font-size: 0.8em; color: #666; margin-top: 5px; }
+        .status-on { color: #28a745; }
+        .status-off { color: #dc3545; }
+        .alert { padding: 10px; margin: 5px 0; border-radius: 4px; }
+        .alert-warning { background: #fff3cd; border-left: 4px solid #ffc107; }
+        .alert-critical { background: #f8d7da; border-left: 4px solid #dc3545; }
+        .loading { text-align: center; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌱 스마트팜 제어 센터</h1>
+        <div id="status">⏳ 데이터 로딩 중...</div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>🌡️ 환경 센서</h3>
+            <div class="sensor-grid">
+                <div class="sensor-item">
+                    <div class="sensor-value" id="temperature">--</div>
+                    <div class="sensor-label">온도 (°C)</div>
+                </div>
+                <div class="sensor-item">
+                    <div class="sensor-value" id="humidity">--</div>
+                    <div class="sensor-label">습도 (%)</div>
+                </div>
+                <div class="sensor-item">
+                    <div class="sensor-value" id="soilMoisture">--</div>
+                    <div class="sensor-label">토양습도 (%)</div>
+                </div>
+                <div class="sensor-item">
+                    <div class="sensor-value" id="soilTemperature">--</div>
+                    <div class="sensor-label">토양온도 (°C)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>💧 수질 & 조도</h3>
+            <div class="sensor-grid">
+                <div class="sensor-item">
+                    <div class="sensor-value" id="lightIntensity">--</div>
+                    <div class="sensor-label">조도 (lux)</div>
+                </div>
+                <div class="sensor-item">
+                    <div class="sensor-value" id="waterLevel">--</div>
+                    <div class="sensor-label">물 높이 (%)</div>
+                </div>
+                <div class="sensor-item">
+                    <div class="sensor-value" id="ph">--</div>
+                    <div class="sensor-label">pH</div>
+                </div>
+                <div class="sensor-item">
+                    <div class="sensor-value" id="co2">--</div>
+                    <div class="sensor-label">CO2 (ppm)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>⚙️ 장비 상태</h3>
+            <div id="actuators">
+                <div>💧 물 펌프: <span id="waterPump" class="status-off">OFF</span></div>
+                <div>🌪️ 환기팬: <span id="ventilationFan" class="status-off">OFF</span></div>
+                <div>💡 LED 조명: <span id="ledLights" class="status-off">OFF</span></div>
+                <div>🔥 히터: <span id="heater" class="status-off">OFF</span></div>
+                <div>💨 가습기: <span id="humidifier" class="status-off">OFF</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>⚠️ 알림</h3>
+            <div id="alerts">
+                <div class="loading">알림을 확인하는 중...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateDashboard() {
+            fetch('/api/data')
+                .then(response => response.json())
+                .then(data => {
+                    // 센서 데이터 업데이트
+                    document.getElementById('temperature').textContent = data.sensors.temperature?.toFixed(1) || '--';
+                    document.getElementById('humidity').textContent = data.sensors.humidity?.toFixed(1) || '--';
+                    document.getElementById('soilMoisture').textContent = data.sensors.soil_moisture?.toFixed(1) || '--';
+                    document.getElementById('soilTemperature').textContent = data.sensors.soil_temperature?.toFixed(1) || '--';
+                    document.getElementById('lightIntensity').textContent = data.sensors.light_intensity || '--';
+                    document.getElementById('waterLevel').textContent = data.sensors.water_level?.toFixed(1) || '--';
+                    document.getElementById('ph').textContent = data.sensors.ph?.toFixed(1) || '--';
+                    document.getElementById('co2').textContent = data.sensors.co2 || '--';
+
+                    // 액추에이터 상태 업데이트
+                    const actuators = data.actuators;
+                    updateActuator('waterPump', actuators.water_pump);
+                    updateActuator('ventilationFan', actuators.ventilation_fan);
+                    updateActuator('ledLights', actuators.led_lights);
+                    updateActuator('heater', actuators.heater);
+                    updateActuator('humidifier', actuators.humidifier);
+
+                    // 알림 업데이트
+                    updateAlerts(data.alerts);
+
+                    // 상태 업데이트
+                    document.getElementById('status').innerHTML = `✅ 연결됨 - v${data.data_version} (${new Date(data.last_updated).toLocaleTimeString()})`;
+                })
+                .catch(error => {
+                    console.error('데이터 로드 실패:', error);
+                    document.getElementById('status').innerHTML = '❌ 연결 실패';
+                });
+        }
+
+        function updateActuator(id, status) {
+            const element = document.getElementById(id);
+            element.textContent = status ? 'ON' : 'OFF';
+            element.className = status ? 'status-on' : 'status-off';
+        }
+
+        function updateAlerts(alerts) {
+            const alertsDiv = document.getElementById('alerts');
+            if (alerts.length === 0) {
+                alertsDiv.innerHTML = '<div style="color: #28a745;">✅ 모든 시스템 정상</div>';
+            } else {
+                alertsDiv.innerHTML = alerts.map(alert => 
+                    `<div class="alert alert-${alert.type}">
+                        ${alert.message} (${alert.value})
+                    </div>`
+                ).join('');
+            }
+        }
+
+        // 3초마다 데이터 업데이트
+        setInterval(updateDashboard, 3000);
+        updateDashboard(); // 즉시 첫 로드
+    </script>
+</body>
+</html>

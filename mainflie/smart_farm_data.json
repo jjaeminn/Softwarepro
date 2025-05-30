@@ -1,0 +1,26 @@
+{
+  "farm_id": "FARM_001",
+  "location": "온실 A동",
+  "sensors": {
+    "temperature": 22.392110909241598,
+    "humidity": 84.22260026996321,
+    "soil_moisture": 39.72792536527238,
+    "light_intensity": 75,
+    "water_level": 76.93429346042473,
+    "ph": 6.4,
+    "ec": 0.88,
+    "co2": 375,
+    "soil_temperature": 21.4
+  },
+  "actuators": {
+    "water_pump": false,
+    "ventilation_fan": false,
+    "led_lights": true,
+    "heater": false,
+    "humidifier": false
+  },
+  "alerts": [],
+  "timestamp": 1748614421.0458672,
+  "last_updated": "2025-05-30T23:13:41.045869",
+  "data_version": 114
+}
