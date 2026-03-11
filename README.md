@@ -1,0 +1,1 @@
+In this project, we divided the roles into embedded systems, backend, and frontend. I was responsible for the backend development, where I handled data transmitted from a Raspberry Pi to be displayed on a web interface. For more details, please refer to the mainfile -> pdf I authored
