@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘의 쑥쑥이</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="relative min-h-screen bg-[#f9faef] font-sans overflow-hidden">
+
+  <!-- 상단 제목 -->
+  <div class="absolute top-16 left-1/2 transform -translate-x-1/2 text-4xl font-extrabold flex items-center">
+    오늘의 쑥쑥이 <span class="ml-2 text-green-500 text-3xl">🌱</span>
+  </div>
+
+  <!-- 성장일 + 날짜 (오른쪽 상단) -->
+  <div class="absolute top-16 right-6 text-right">
+    <div class="flex items-center justify-end text-lg">
+      <span class="mr-2">+ 53일째 쑥쑥 크는중</span> <span class="text-2xl">💧</span>
+    </div>
+    <div class="text-sm text-gray-700 font-semibold mt-1">2024.05.26</div>
+  </div>
+
+  <!-- 좌우 정보 & 중앙 꽃 -->
+  <div class="flex justify-center items-center h-screen gap-28">
+
+    <!-- 왼쪽: 온습도 -->
+    <div class="flex flex-col items-center text-2xl font-semibold gap-10">
+      <div class="flex items-center gap-3">
+        🌡️ <span>21°C</span>
+      </div>
+      <div class="flex items-center gap-3">
+        💧 <span>23%</span>
+      </div>
+    </div>
+
+    <!-- 중앙: 꽃 이미지 -->
+    <div>
+      <img src="https://cdn-icons-png.flaticon.com/512/765/765001.png"
+        alt="쑥쑥이 꽃"
+        class="w-64 h-64 object-contain"
+      />
+    </div>
+
+    <!-- 오른쪽: 물주기 -->
+    <div class="flex flex-col items-center text-center text-xl font-medium gap-3">
+      <div class="text-5xl">🥛</div>
+      <div>자동으로 물주기</div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" class="sr-only peer" checked>
+        <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500"></div>
+      </label>
+    </div>
+
+  </div>
+
+  <!-- 하단 언덕 배경 -->
+  <div class="absolute bottom-0 w-full h-28 bg-green-100 rounded-t-[50%]"></div>
+
+</body>
+</html>
