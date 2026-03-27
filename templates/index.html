@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘의 쑥쑥이</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+</head>
+<body class="relative min-h-screen bg-[#f9faef] font-sans overflow-hidden">
+
+  <!-- 상단 제목 -->
+  <div class="absolute top-16 left-1/2 transform -translate-x-1/2 text-4xl font-extrabold flex items-center">
+    오늘의 쑥쑥이 <span class="ml-2 text-green-500 text-3xl">🌱</span>
+  </div>
+
+  
+  <div class="absolute top-16 right-6 text-right">
+    <div class="text-xs text-gray-600 mb-1">
+      심기 시작한 날: <input type="date" id="startDateInput" class="bg-transparent border-b border-gray-400 text-xs focus:outline-none focus:border-green-500" style="width: 95px;">
+    </div>
+    <div class="flex items-center justify-end text-lg" id="growth_info_container">
+      <span class="mr-2" id="growth_days_text">쑥쑥 크는중</span> <span class="text-2xl">💧</span>
+    </div>
+    <div class="text-sm text-gray-700 font-semibold mt-1" id="current_date_text">YYYY.MM.DD</div>
+  </div>
+
+  <!-- 좌우 정보 & 중앙 꽃 -->
+  <div class="flex justify-center items-center h-screen gap-28">
+
+    <!-- 왼쪽: 온습도 -->
+    <div class="flex flex-col items-center text-2xl font-semibold gap-10">
+      <div class="flex items-center gap-3">
+        🌡️ <span id="temperature">N/A</span>°C
+      </div>
+      <div class="flex items-center gap-3">
+        💧 <span id="humidity">N/A</span>%
+      </div>
+    </div>
+
+    <!-- 중앙: 꽃 이미지 및 토양 상태 -->
+    <div class="text-center">
+      <img src="https://cdn-icons-png.flaticon.com/512/765/765001.png"
+        alt="쑥쑥이 꽃"
+        class="w-64 h-64 object-contain mb-4"
+      />
+      <div class="text-xl font-medium">토양 상태: <span id="soil_status_text">N/A</span></div>
+    </div>
+
+    <!-- 오른쪽: 물주기 및 펌프 상태 -->
+    <div class="flex flex-col items-center text-center text-xl font-medium gap-3">
+      <div class="text-5xl">🥛</div>
+      <div>자동으로 물주기</div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" id="autoWaterToggle" class="sr-only peer">
+        <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500"></div>
+      </label>
+      <div class="mt-2 text-lg">펌프: <span id="pump_status_text">N/A</span></div>
+    </div>
+
+  </div>
+
+  <!-- 하단 언덕 배경 -->
+  <div class="absolute bottom-0 w-full h-28 bg-green-100 rounded-t-[50%]"></div>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
